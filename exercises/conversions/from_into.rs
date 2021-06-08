@@ -33,16 +33,31 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
+
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let (name, age) = s.trim().split_once(',').unwrap_or_else(|| ("John", "30"));
+
+        if name.len() == 0 {
+            Person::default()
+        } else {
+            match age.parse::<usize>() {
+                Ok(num) => {
+                    Person {
+                        name: name.to_string(),
+                        age: num,
+                    }
+                },
+                Err(_) => Person::default()
+            }
+        }
     }
 }
 
 fn main() {
     // Use the `from` function
-    let p1 = Person::from("Mark,20");
+    let p1 = Person::from("");
     // Since From is implemented for Person, we should be able to use Into
     let p2: Person = "Gerald,70".into();
     println!("{:?}", p1);

@@ -11,7 +11,6 @@ struct Person {
     age: usize,
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -26,11 +25,29 @@ struct Person {
 impl FromStr for Person {
     type Err = Box<dyn error::Error>;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        let sv: Vec<&str> = s.trim().split(',').collect();
+
+        if sv.len() != 2 {
+            Err("Invalid string")?
+        } else {
+            let name = sv.get(0).unwrap();
+            if name.len() == 0 {
+                Err("Empty string")?
+            } else {
+                let age = sv.get(1).unwrap().parse::<usize>()?;
+
+                Ok(Person {
+                        name: name.to_string(),
+                        age: age,
+                    }
+                )
+            }
+        }
     }
 }
 
 fn main() {
-    let p = "Mark,20".parse::<Person>().unwrap();
+    let p = ",20".parse::<Person>().unwrap();
     println!("{:?}", p);
 }
 
